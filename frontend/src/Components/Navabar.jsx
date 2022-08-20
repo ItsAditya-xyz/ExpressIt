@@ -1,5 +1,6 @@
 import { useState } from "react";
 import logo from "../assets/logo2.svg"
+import { Link } from "react-router-dom";
 export default function NavBar() {
   const [navbar, setNavbar] = useState(false);
 
@@ -58,11 +59,13 @@ export default function NavBar() {
             }`}>
             <ul className='items-center justify-center space-y-8 md:flex md:space-x-6 md:space-y-0'>
               <li className='text-gray-600 hover:text-blue-600'>
-                <a href='/'>Feed</a>
+               
+                <Link to = "/home">Feed</Link>
               </li>
 
               <li className='text-gray-600 hover:text-blue-600'>
-               <button className="px-4 py-2 primaryColor text-white rounded-md shadow-md hover:shadow-xl">Get Started</button>
+               <Link className="px-4 py-2 primaryColor text-white rounded-md shadow-md hover:shadow-xl"
+               to="/home">Get Started</Link>
               </li>
              
             </ul>

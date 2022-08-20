@@ -1,6 +1,6 @@
 import { React, useState } from "react";
 import NavBar from "./Navabar";
-
+import { Link } from "react-router-dom";
 export default function Landing() {
   const [showModal, setShowModal] = useState(false);
   return (
@@ -16,11 +16,11 @@ export default function Landing() {
             mental breakdown
           </p>
 
-          <button
+          <Link
             className='primaryColor text-white animate-bounce mt-16 px-8 py-3 rounded-lg shadow-lg hover:shadow-xl'
-            onClick={() => setShowModal(true)}>
+           to = "/home">
             Get Started
-          </button>
+          </Link>
 
           <div className='flex justify-center flex-col items-center my-6'>
             <div className=' text-lg px-10 py-8 bg-[#ffffff57] rounded-md border border-red-200'>
