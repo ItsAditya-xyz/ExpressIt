@@ -4,10 +4,12 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import logo from "../../assets/logo2.svg";
 import Loader from "../Loader";
 import Deso from "deso-protocol";
-
+import axios from "axios";
+import { Link } from "react-router-dom";
 import Postbox from "./Postbox";
 const da = new desoApi();
-const deso = new Deso()
+const deso = new Deso();
+
 export default function Feed() {
   const firstPostHashHex =
     "8b70a43ac73c5da4a7428b03b4ec9e9092f35590e5fac2ac5342285cd906a180";
@@ -16,8 +18,15 @@ export default function Feed() {
   const [lastPostHashHex, setLastPostHashHex] = useState("");
   const [hasMore, setHasMore] = useState(true);
   const timestamp = new Date().getTime();
-  const [loggedInPublicKey, setLoggedInPublicKey] = useState(null)
-console.log(`current time ${timestamp}`)
+  const [loggedInPublicKey, setLoggedInPublicKey] = useState(null);
+  const [bodyContent, setBodyContent] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [isPosting, setIsPosting] = useState(false);
+  const [postHashHex, setPostHashHex] = useState("");
+  const [wasPostSuccessful, setWasPostSuccessful] = useState(false);
+
+  const [remark, setRemark] = useState("");
+  console.log(`current time ${timestamp}`);
   const initLatestPost = async () => {
     try {
       const latestPosts = await da.getExpressItPosts(lastPostHashHex, 20);
@@ -33,10 +42,58 @@ console.log(`current time ${timestamp}`)
     }
   };
 
-  const changeLoginState =  (publicKey) => {
-    setLoggedInPublicKey(publicKey)
-  
-  }
+  const changeLoginState = (publicKey) => {
+    setLoggedInPublicKey(publicKey);
+  };
+
+  const handlePost = (async) => {
+    if (bodyContent.length == 0) {
+      alert("Please enter some text to post");
+      return;
+    }
+    setIsPosting(true);
+    if (
+      new RegExp(
+        "([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?"
+      ).test(bodyContent)
+    ) {
+      window.alert(
+        "Please do not include links in your post! Only English words are allowed"
+      );
+      setIsPosting(false);
+      return;
+    }
+
+    const request = {
+      content: bodyContent,
+    };
+    axios({
+      method: "post",
+      url: "https://mintedtweets.cordify.app/expressIt",
+      data: request,
+    })
+      .then((res) => {
+        const response = res.data;
+        setRemark(response.message);
+        if (response.status) {
+          setBodyContent("");
+          setWasPostSuccessful(true);
+          setPostHashHex(response.data.PostEntryResponse.PostHashHex);
+          //await for 3 seconds
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+          setShowModal(true);
+        } else {
+          setShowModal(true);
+          setWasPostSuccessful(false);
+        }
+        setIsPosting(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsPosting(false);
+        setShowModal(true);
+      });
+  };
 
   const fetchMoreData = async () => {
     try {
@@ -52,9 +109,9 @@ console.log(`current time ${timestamp}`)
     }
   };
   useEffect(async () => {
-    const loggedInKey = localStorage.getItem('loggedInKey')
-    if(loggedInKey){
-      setLoggedInPublicKey(loggedInKey.toString())
+    const loggedInKey = localStorage.getItem("loggedInKey");
+    if (loggedInKey) {
+      setLoggedInPublicKey(loggedInKey.toString());
     }
     await initLatestPost();
   }, []);
@@ -95,14 +152,64 @@ console.log(`current time ${timestamp}`)
               <div className=' flex mt-2 space-x-3'>
                 <div className='w-full h-[16rem]'>
                   <textarea
+                    id='textArea'
+                    value={bodyContent}
+                    onChange={(e) => setBodyContent(e.target.value)}
                     placeholder='How are you feeling today? Share anything about you here!'
                     className='border-[0.12rem] border-[#d3d3d3]  rounded-lg resize-none px-2 py-2 w-full focus:outline-none active:outline-none h-[16rem]'></textarea>
                 </div>
               </div>
               <div className='flex justify-center'>
-                <button className='primaryColor text-white px-6 py-2 rounded-md hover:shadow-xl shadow-md my-3'>
-                  Post
+                <button
+                  className='primaryColor text-white px-6 py-2 rounded-md hover:shadow-xl shadow-md my-3'
+                  onClick={() => {
+                    handlePost();
+                  }}>
+                  {isPosting ? "Posting..." : "Post"}
                 </button>
+                {showModal ? (
+                  <>
+                    <div className='justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none'>
+                      <div className='relative w-auto my-6 mx-auto max-w-3xl'>
+                        <div className='border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none'>
+                          <div className='flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t'>
+                            <h3 className='text-3xl font-semibold'>
+                              {wasPostSuccessful
+                                ? "Post Successful!"
+                                : "Failed to Make post"}
+                            </h3>
+                            <button
+                              className='p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none'
+                              onClick={() => setShowModal(false)}>
+                              <span className='bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none'>
+                                ×
+                              </span>
+                            </button>
+                          </div>
+                          {/*body*/}
+                          <div className='relative p-6 flex-auto'>{remark}</div>
+                          {/*footer*/}
+                          <div className='flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b'>
+                            <button
+                              className='text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150'
+                              type='button'
+                              onClick={() => setShowModal(false)}>
+                              Close
+                            </button>
+                            {wasPostSuccessful && (
+                              <Link
+                                className='bg-green-500 text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150'
+                                to={"/post/" + postHashHex}>
+                                View Post
+                              </Link>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className='opacity-25 fixed inset-0 z-40 bg-black'></div>
+                  </>
+                ) : null}
               </div>
             </div>
           </div>
@@ -113,7 +220,9 @@ console.log(`current time ${timestamp}`)
             </div>
             <div className='rounded-b-md bg-white py-3 px-3 w-[18rem]'>
               <p>1. No personal attack or toxicity</p>
-              <p>2. You can supoprt people only thorugh your own Deso Identity</p>
+              <p>
+                2. You can supoprt people only thorugh your own Deso Identity
+              </p>
               <p>3. Images, links and some banned words are not allowed</p>
               <p>4. Only 1 post per 5 minutes</p>
               <p>
@@ -130,9 +239,8 @@ console.log(`current time ${timestamp}`)
               <h1 className='text-center text-3xl md:text-4xl font-bold primaryTextColor tracking-wide sm:leading-[4rem]'>
                 Latest Posts
               </h1>
-             
 
-           {postLoaded ? (
+              {postLoaded ? (
                 <div className=' my-2 flex justify-center flex-wrap'>
                   <InfiniteScroll
                     className=' mx-auto flex flex-col flex-wrap pt-4 pb-12 '
@@ -146,14 +254,21 @@ console.log(`current time ${timestamp}`)
                     }>
                     {latestPosts.map((post, index) => {
                       return (
-                       <Postbox currentTimestamp = {timestamp} post = {post} key={index} desoObj={deso} loginState={loggedInPublicKey} changeLoginState = {changeLoginState}/>
+                        <Postbox
+                          currentTimestamp={timestamp}
+                          post={post}
+                          key={index}
+                          desoObj={deso}
+                          loginState={loggedInPublicKey}
+                          changeLoginState={changeLoginState}
+                        />
                       );
                     })}
                   </InfiniteScroll>
                 </div>
               ) : (
                 <Loader />
-              )} 
+              )}
             </div>
           </div>
           <div className='sidebar mx-auto my-2 '>
