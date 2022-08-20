@@ -1,13 +1,12 @@
 import React from "react";
 import timeDifference from "../../api/timeFunc";
-import { Link } from "react-router-dom";
-export default function Postbox({
+
+export default function CommentBox({
   currentTimestamp,
   post,
   desoObj,
   loginState,
   changeLoginState,
-  showPostBtn
 }) {
   const [showModal, setShowModal] = React.useState(false);
   const [currentLoginState, setCurrentLoginState] = React.useState(loginState);
@@ -65,16 +64,12 @@ export default function Postbox({
     }
   };
   return (
-    <div className='bg-white border-[0.1rem] border-[#d3d3d3] rounded-lg shadow-sm px-4 pt-2 my-2'>
-      <div className='flex items-center space-x-1 justify-between px-2 my-2'>
+    <div className='bg-white border-[0.1rem]  shadow-sm px-4 pt-2 '>
+      <div className='flex items-center space-x-1'>
+       <img src = {`https://node.deso.org/api/v0/get-single-profile-picture/${post.ProfileEntryResponse.PublicKeyBase58Check}?fallback=https://diamondapp.com/assets/img/default_profile_pic.png`}
+       className='w-8 h-8 rounded-full' alt='profile' />
         <div>
-
-       
-        <div className='w-11 h-11 primaryColor rounded-full text-white flex items-center px-4 text-lg'>
-          A
-        </div>
-        <div>
-          <p className='font-semibold'>Anonymous</p>
+          <p className='font-semibold'>{post.ProfileEntryResponse.Username || "Anonymous"}</p>
           <p className='text-xs'>
             {timeDifference(
               currentTimestamp,
@@ -82,8 +77,6 @@ export default function Postbox({
             )}
           </p>
         </div>
-        </div>
-       {showPostBtn &&  <Link to={`/posts/${post.PostHashHex}`} className= "text-sm px-2 py-1 bg-gray-200 rounded-lg" >View Post</Link> }
       </div>
       <div className='flex items-center space-x-1 my-3'>
         <div className='w-11 h-11 '></div>
@@ -101,7 +94,7 @@ export default function Postbox({
             <button className='fas fa-retweet px-2 py-2 text-green-500  rounded-full hover:cursor-not-allowed  '></button>
             <p>{post.RepostCount + post.QuoteRepostCount}</p>
           </div>
-          <div className='flex items-center animate-bounce'>
+          <div className='flex items-center '>
             <button
               onClick={() => setShowModal(true)}
               className='fas fa-comment e px-2 py-2 text-gray-400  hover:pointer rounded-full hover:bg-blue-200'></button>

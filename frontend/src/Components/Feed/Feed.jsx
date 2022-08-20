@@ -26,7 +26,7 @@ export default function Feed() {
   const [wasPostSuccessful, setWasPostSuccessful] = useState(false);
 
   const [remark, setRemark] = useState("");
-  console.log(`current time ${timestamp}`);
+  
   const initLatestPost = async () => {
     try {
       const latestPosts = await da.getExpressItPosts(lastPostHashHex, 20);
@@ -47,6 +47,7 @@ export default function Feed() {
   };
 
   const handlePost = (async) => {
+    if (isPosting) return;
     if (bodyContent.length == 0) {
       alert("Please enter some text to post");
       return;
@@ -199,7 +200,7 @@ export default function Feed() {
                             {wasPostSuccessful && (
                               <Link
                                 className='bg-green-500 text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150'
-                                to={"/post/" + postHashHex}>
+                                to={"/posts/" + postHashHex}>
                                 View Post
                               </Link>
                             )}
@@ -261,6 +262,7 @@ export default function Feed() {
                           desoObj={deso}
                           loginState={loggedInPublicKey}
                           changeLoginState={changeLoginState}
+                          showPostBtn={true}
                         />
                       );
                     })}
