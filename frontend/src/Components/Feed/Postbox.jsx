@@ -7,7 +7,7 @@ export default function Postbox({
   desoObj,
   loginState,
   changeLoginState,
-  showPostBtn
+  showPostBtn,
 }) {
   const [showModal, setShowModal] = React.useState(false);
   const [currentLoginState, setCurrentLoginState] = React.useState(loginState);
@@ -60,30 +60,36 @@ export default function Postbox({
       }
     } catch (err) {
       console.log(err);
-      alert("Something went wrong. Please try again. If error persists this is likely because you don't have gas fee");
+      alert(
+        "Something went wrong. Please try again. If error persists this is likely because you don't have gas fee"
+      );
       setIsCommenting(false);
     }
   };
   return (
-    <div className='bg-white border-[0.1rem] border-[#d3d3d3] rounded-lg shadow-sm px-4 pt-2 my-2'>
-      <div className='flex items-center space-x-1 justify-between px-2 my-2'>
+    <div className='bg-white border-[0.1rem] border-[#d3d3d3] rounded-lg shadow-sm px-2 pt-2 my-2'>
+      <div className='flex items-center space-x-1 justify-between px-2 my-2 w-[24rem] sm:w-[34rem] md:w-[40rem]'>
         <div>
-
-       
-        <div className='w-11 h-11 primaryColor rounded-full text-white flex items-center px-4 text-lg'>
-          A
+          <div className='w-11 h-11 primaryColor rounded-full text-white flex items-center px-4 text-lg'>
+            A
+          </div>
+          <div>
+            <p className='font-semibold'>Anonymous</p>
+            <p className='text-xs'>
+              {timeDifference(
+                currentTimestamp,
+                Math.round(post.TimestampNanos / 1e6)
+              )}
+            </p>
+          </div>
         </div>
-        <div>
-          <p className='font-semibold'>Anonymous</p>
-          <p className='text-xs'>
-            {timeDifference(
-              currentTimestamp,
-              Math.round(post.TimestampNanos / 1e6)
-            )}
-          </p>
-        </div>
-        </div>
-       {showPostBtn &&  <Link to={`/posts/${post.PostHashHex}`} className= "text-sm px-2 py-1 bg-gray-200 rounded-lg" >View Post</Link> }
+        {showPostBtn && (
+          <Link
+            to={`/posts/${post.PostHashHex}`}
+            className='text-sm px-2 py-1 bg-gray-200 rounded-lg'>
+            View Post
+          </Link>
+        )}
       </div>
       <div className='flex items-center space-x-1 my-3'>
         <div className='w-11 h-11 '></div>
