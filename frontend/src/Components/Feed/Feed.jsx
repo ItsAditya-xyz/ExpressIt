@@ -80,7 +80,7 @@ export default function Feed() {
           setWasPostSuccessful(true);
           setPostHashHex(response.data.PostEntryResponse.PostHashHex);
           //await for 3 seconds
-          await new Promise((resolve) => setTimeout(resolve, 2000));
+          new Promise((resolve) => setTimeout(resolve, 2000));
           setShowModal(true);
         } else {
           setShowModal(true);
