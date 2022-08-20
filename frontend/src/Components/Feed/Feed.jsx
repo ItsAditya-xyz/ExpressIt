@@ -12,7 +12,7 @@ const deso = new Deso();
 
 export default function Feed() {
   const firstPostHashHex =
-    "8b70a43ac73c5da4a7428b03b4ec9e9092f35590e5fac2ac5342285cd906a180";
+    "2e7860e2bfa7d2a3757d96f7901c736ecf1f79b1ae0e45a31d499c54c91316ba";
   const [postLoaded, setPostLoaded] = useState(false);
   const [latestPosts, setLatestPosts] = useState(null);
   const [lastPostHashHex, setLastPostHashHex] = useState("");
