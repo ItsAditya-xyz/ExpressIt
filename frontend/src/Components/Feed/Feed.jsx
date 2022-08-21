@@ -139,7 +139,7 @@ export default function Feed() {
               Express your Mental State <br></br> Anonymously
             </h1>
             <p className=' text-center mt-4 text-sm text-gray-800  primaryTextColor'>
-              Share feelings, get help and and support people who are having
+              Share feelings, get help and support people who are having
               mental breakdown
             </p>
           </div>
@@ -222,7 +222,7 @@ export default function Feed() {
             <div className='rounded-b-md bg-white py-3 px-3 w-[18rem]'>
               <p>1. No personal attack or toxicity</p>
               <p>
-                2. You can supoprt people only thorugh your own Deso Identity
+                2. You can supoprt people only through your own Deso Identity
               </p>
               <p>3. Images, links and some banned words are not allowed</p>
               <p>4. Only 1 post per 5 minutes</p>
