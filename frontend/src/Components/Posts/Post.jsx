@@ -63,7 +63,7 @@ export default function Post() {
             <div className='flex items-center justify-between py-1  md:block'>
               <div className='flex items-center space-x-1'>
                 <img src={logo} alt='logo' className='w-auto h-14 ' />
-                <Link to='/'>
+                <Link to='/home'>
                   <h2 className='text-2xl font-bold'>Express It</h2>
                 </Link>
               </div>

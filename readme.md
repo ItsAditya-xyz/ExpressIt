@@ -1,11 +1,13 @@
 This is repository for Express it web app.
 
+URL: https://express-it.vercel.app/
+
 # What is Express It?
 Express it is an anonymous social platform for people who want to express themself in front of the world without being judged. Express it enables them to have acceptance of their present and confess things which they won't do in public. With the use of Deso Blockchain, Express It provides full anonymity to the user.
 
 ## Why it was built?
 Express It was built during `A hack a day 2` MLH Hackathon on the theme of `health and wellness`.
-The motto of Express it social network is to give a tool to those who want to express their feelings without beings judged. Opening up feelings is good for health and many people don't open up due to fear of being judged and embarrased. This is where Express it makes it easy for those.
+The motto of Express it social network is to give a tool to those who want to express their feelings without beings judged. Opening up feelings is good for health and many people don't open up due to fear of being judged and embarrassed. This is where Express it makes it easy for those.
 
 ## Tech Stack used
 1. Frontend: ReactJS + TailwindCSS
